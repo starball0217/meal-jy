@@ -2,6 +2,7 @@ import re
 from datetime import date
 
 import streamlit as st
+import streamlit.components.v1 as components
 
 from ai_helper import ask_ai
 from meal_api import fetch_meals, search_schools
@@ -36,7 +37,29 @@ def format_menu(ddish):
             lines.append(f"{name} {codes}".strip())
     return lines
 
-st.set_page_config(page_title="학교 급식 알리미", page_icon="🍱")
+APP_NAME = "급식 알리미"
+APP_HEAD_HTML = """
+<script>
+(function () {
+  const doc = window.parent.document;
+  if (doc.querySelector('link[rel="manifest"]')) return;
+  const add = (tag, attrs) => {
+    const el = doc.createElement(tag);
+    Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    doc.head.appendChild(el);
+  };
+  add("link", {rel: "manifest", href: "/app/static/manifest.json"});
+  add("link", {rel: "apple-touch-icon", href: "/app/static/icon-192.png"});
+  add("meta", {name: "apple-mobile-web-app-capable", content: "yes"});
+  add("meta", {name: "apple-mobile-web-app-title", content: "급식 알리미"});
+  add("meta", {name: "theme-color", content: "#ff7a59"});
+  doc.title = "급식 알리미";
+})();
+</script>
+"""
+
+st.set_page_config(page_title=APP_NAME, page_icon="🍱")
+components.html(APP_HEAD_HTML, height=0)
 st.title("🍱 학교 급식 알리미")
 
 with st.form("school_search"):
